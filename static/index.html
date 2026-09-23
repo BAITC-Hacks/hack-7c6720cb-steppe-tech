@@ -66,7 +66,7 @@
                 margin-bottom: 18px; }
   .panel-head h2 { font: 700 20px/1.2 var(--display); margin: 0; letter-spacing: -.02em; }
   .panel-head p { margin: 0; color: var(--muted); font-size: 14px; }
-  form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  #f { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
   .field span { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
   .field span i { font-style: normal; font-weight: 500; text-transform: none; letter-spacing: 0; color: #9AA1B2; }
@@ -103,6 +103,62 @@
   .preset.active { background: var(--blue); border-color: var(--blue); color: var(--white); }
   .preset.active em { background: var(--white); color: var(--blue); }
 
+  /* ---------- AI ---------- */
+  .ai { background: var(--ink); color: var(--white); border-radius: 18px; padding: 18px; margin-bottom: 22px;
+        position: relative; overflow: hidden; }
+  .ai::after { content: ""; position: absolute; left: -80px; top: -140px; width: 320px; height: 320px;
+               background: radial-gradient(circle, rgba(23,71,255,.55), transparent 65%); pointer-events: none; }
+  .ai > * { position: relative; z-index: 1; }
+  .ai-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .ai-title { display: flex; align-items: center; gap: 10px; font: 700 16px/1.2 var(--display); }
+  .spark { width: 30px; height: 30px; border-radius: 9px; background: var(--blue); display: grid; place-items: center; flex: none; }
+  .ai-state { font-size: 12px; color: #9AA1B2; display: flex; align-items: center; gap: 6px; }
+  .ai-state .dot.off { background: #6B7280; box-shadow: none; }
+  .ai-row { display: flex; gap: 10px; }
+  .ai-row input { flex: 1; background-color: #16181D; color: var(--white); border-color: var(--line-dark); font-weight: 500; }
+  .ai-row input::placeholder { color: #7C8394; }
+  .ai-row input:hover { border-color: #3A3F4B; }
+  .ai-row input:focus { background-color: #16181D; box-shadow: 0 0 0 4px rgba(23,71,255,.35); }
+  .ai-row .go { flex: none; }
+  .ai-examples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .ai-ex { font: 500 12px/1.3 var(--body); color: #C9CEDA; background: transparent; border: 1px solid var(--line-dark);
+           border-radius: 99px; padding: 6px 12px; cursor: pointer; text-align: left; }
+  .ai-ex:hover { border-color: var(--blue); color: var(--white); }
+  .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 12px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .06em; margin: 0 0 18px; }
+  .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  .agent { background: var(--white); border: 2px solid var(--blue); border-radius: var(--radius); padding: 22px 24px;
+           margin-bottom: 16px; box-shadow: 0 24px 48px -24px rgba(23,71,255,.35); }
+  .agent-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .agent-top b { font: 700 16px/1.2 var(--display); }
+  .agent-top .model { font-size: 12px; color: var(--muted); margin-left: auto; }
+  .agent p.say { font-size: 17px; line-height: 1.55; margin: 0; color: var(--ink); }
+  .agent p.say q { quotes: "«" "»"; }
+  .check { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; border-radius: 99px;
+           padding: 4px 10px; background: var(--blue-soft); color: var(--blue-deep); }
+  .check.warn { background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink); }
+  .trace { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+  .trace-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .tstep { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; }
+  .tstep > div { min-width: 0; }
+  .tstep em { font: 700 11px/1 var(--display); background: var(--ink); color: var(--white); border-radius: 7px;
+              padding: 5px 7px; flex: none; font-style: normal; }
+  .tstep code { font: 500 12px/1.5 ui-monospace, "Cascadia Code", Consolas, monospace; background: var(--paper);
+                border-radius: 6px; padding: 2px 6px; overflow-wrap: anywhere; }
+  .tstep .res { color: var(--muted); margin-top: 2px; }
+  .tstep button { margin-left: auto; flex: none; font: 700 12px/1 var(--body); color: var(--blue); background: none;
+                  border: 1.5px solid var(--blue-soft); border-radius: 99px; padding: 6px 10px; cursor: pointer; }
+  .tstep button:hover { border-color: var(--blue); }
+  .clarify { display: flex; gap: 14px; align-items: flex-start; }
+  .clarify p { margin: 0; font-size: 17px; }
+  @media (max-width: 560px) {
+    .ai-row { flex-direction: column; }
+    .ai-row .go { align-self: stretch; }
+    .agent { padding: 18px; }
+    .agent-top .model { margin-left: 0; width: 100%; }
+  }
+
   /* ---------- Results ---------- */
   #out { margin-top: 36px; min-height: 40px; scroll-margin-top: 20px; }
   .empty { text-align: center; padding: 48px 20px; color: var(--muted); }
@@ -118,7 +174,8 @@
   .verdict > * { position: relative; z-index: 1; min-width: 0; }
   .tag { display: inline-flex; align-items: center; gap: 8px; font: 700 12px/1 var(--body); text-transform: uppercase;
          letter-spacing: .08em; padding: 7px 12px; border-radius: 99px; background: var(--blue); color: var(--white); }
-  .v-no_match .tag, .v-no_category_in_city .tag { background: var(--white); color: var(--ink); }
+  .v-no_match .tag { background: var(--white); color: var(--ink); }
+  .v-no_category_in_city .tag { background: transparent; color: var(--white); box-shadow: inset 0 0 0 1.5px var(--white); }
   .v-invalid_request .tag { background: #FF3B3B; }
   .verdict h3 { font: 700 clamp(18px, 2.4vw, 24px)/1.3 var(--display); letter-spacing: -.02em; margin: 14px 0 8px; }
   .verdict p { margin: 6px 0 0; color: #BFC5D2; font-size: 15px; }
@@ -208,7 +265,7 @@
   footer .brand svg { width: 30px; height: 30px; }
 
   @media (max-width: 960px) {
-    form { grid-template-columns: repeat(2, 1fr); }
+    #f { grid-template-columns: repeat(2, 1fr); }
     .go { grid-column: 1 / -1; }
     .cards { grid-template-columns: 1fr; }
     .verdict { grid-template-columns: 1fr; }
@@ -217,7 +274,7 @@
   @media (max-width: 560px) {
     .wrap { padding: 0 16px; }
     .panel { padding: 18px; border-radius: 20px; }
-    form { grid-template-columns: 1fr; }
+    #f { grid-template-columns: 1fr; }
     .blocks, .how-grid { grid-template-columns: 1fr; }
     .nav-chip .long { display: none; }
     .funnel { flex-wrap: wrap; }
@@ -252,9 +309,9 @@
       <div class="nav-chip"><span class="dot"></span><span id="dataChip">Загружаем каталог…</span></div>
     </nav>
     <div class="hero-body">
-      <span class="eyebrow">★ Умный подбор event-подрядчиков</span>
+      <span class="eyebrow">★ ИИ-агент + прозрачный движок подбора</span>
       <h1>Три подрядчика.<br><span class="blue">И почему именно они.</span></h1>
-      <p class="lead">Укажите город, дату и бюджет. Сервис уберёт занятых и дорогих и оставит лучших. Каждый выбор объяснён фактами из профиля.</p>
+      <p class="lead">Напишите запрос своими словами или заполните форму. Сервис уберёт занятых и дорогих и оставит лучших. Каждый выбор объяснён фактами из профиля.</p>
       <div class="kpis">
         <div class="kpi"><b id="kVendors">—</b><span>профилей в каталоге</span></div>
         <div class="kpi"><b id="kCats">—</b><span>категорий</span></div>
@@ -267,6 +324,22 @@
 
 <main class="wrap">
   <section class="panel" aria-label="Параметры подбора">
+    <form class="ai" id="aiForm" autocomplete="off">
+      <div class="ai-head">
+        <div class="ai-title"><span class="spark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>
+        </span>Опишите событие своими словами</div>
+        <span class="ai-state" id="aiState"><span class="dot off"></span>ИИ-агент проверяется…</span>
+      </div>
+      <div class="ai-row">
+        <input name="text" id="aiText" maxlength="1000" placeholder="Например: свадьба в Алматы 14 ноября, бюджет 500к, ведущий на казахском">
+        <button class="go" type="submit" id="aiGo">Спросить ИИ
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="ai-examples" id="aiExamples"></div>
+    </form>
+    <div class="or">или заполните форму</div>
     <div class="panel-head">
       <h2>Что за событие?</h2>
       <p>Длительность и язык можно не указывать</p>
@@ -303,14 +376,14 @@
   <section class="how">
     <h2>Как работает подбор</h2>
     <div class="how-grid">
-      <div class="how-item"><span class="num">01</span><b>Жёсткие фильтры</b>
-        <p>Город, категория, формат события, бюджет, язык и часы. Не подходит хоть по одному условию, значит не в выдаче.</p></div>
-      <div class="how-item"><span class="num">02</span><b>Занятость на дату</b>
-        <p>Занятые в выбранный день отсекаются. Сервис показывает, кто вошёл бы в тройку в другой день.</p></div>
+      <div class="how-item"><span class="num">01</span><b>ИИ-агент понимает запрос</b>
+        <p>LLM разбирает фразу в параметры и сам вызывает движок. Если никто не подошёл, агент ищет на соседней дате.</p></div>
+      <div class="how-item"><span class="num">02</span><b>Фильтры и занятость</b>
+        <p>Город, категория, формат, бюджет, язык, часы и занятость на дату. Не подходит хоть по одному условию, значит не в выдаче.</p></div>
       <div class="how-item"><span class="num">03</span><b>Прозрачный рейтинг</b>
         <p>Смысл описания, запас бюджета, язык, часы и надёжность данных. Каждый вес виден в карточке.</p></div>
-      <div class="how-item dark"><span class="num">04</span><b>Честный ответ</b>
-        <p>Если подходящих меньше трёх или нет вовсе, сервис так и скажет. И подскажет, что поменять.</p></div>
+      <div class="how-item dark"><span class="num">04</span><b>Проверка фактов</b>
+        <p>Каждое число в совете ИИ сверяется с данными движка. Не сошлось — показываем текст движка, а не догадку модели.</p></div>
     </div>
   </section>
 </main>
@@ -352,6 +425,7 @@ async function init() {
   fill(f.language, o.languages);
   f.date.min = o.window[0]; f.date.max = o.window[1]; f.date.value = "2026-11-14";
   f.budget.value = 500000;
+  initAi(o.ai);
   countUp(document.getElementById("kVendors"), o.data.total);
   countUp(document.getElementById("kCats"), o.categories.length);
   countUp(document.getElementById("kCities"), o.cities.length);
@@ -373,6 +447,10 @@ async function init() {
   });
   const m = location.hash.match(/^#s(\d+)$/);
   if (m && box.children[m[1] - 1]) box.children[m[1] - 1].click();
+  if (location.hash.startsWith("#ask=")) {
+    aiForm.text.value = decodeURIComponent(location.hash.slice(5));
+    aiRun();
+  }
 }
 
 function setForm(p) {
@@ -432,8 +510,8 @@ function card(c, i) {
   </article>`;
 }
 
-function render(r) {
-  let h = `<div class="verdict v-${esc(r.outcome)}"><div><span class="tag">${esc(r.outcome_label)}</span>
+function render(r, prefix = "") {
+  let h = prefix + `<div class="verdict v-${esc(r.outcome)}"><div><span class="tag">${esc(r.outcome_label)}</span>
            <h3>${esc(r.headline)}</h3>`;
   for (const k of ["why_fewer", "date_effect"]) if (r[k]) h += `<p>${quoteify(r[k])}</p>`;
   (r.notes || []).forEach(n => h += `<p>${esc(n)}</p>`);
@@ -463,6 +541,79 @@ f.addEventListener("submit", e => {
   history.replaceState(null, "", location.pathname);
   run();
 });
+/* ---------- ИИ-агент ---------- */
+const aiForm = document.getElementById("aiForm");
+const aiGo = document.getElementById("aiGo");
+const AI_EXAMPLES = ["Свадьба в Алматы 14 ноября, бюджет 500к, ведущий на казахском",
+                     "Той 5 декабря в Алматы, нужен флорист, бюджет 250 тысяч",
+                     "Корпоратив 26 сентября в Алматы, ведущий, до 1.24 млн"];
+const SPARK = `<span class="spark"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/></svg></span>`;
+let aiSteps = [];
+
+function initAi(st) {
+  const el = document.getElementById("aiState");
+  el.innerHTML = st && st.enabled
+    ? `<span class="dot"></span>ИИ-агент онлайн · ${esc(st.model)}`
+    : `<span class="dot off"></span>ИИ выключен: нет ключа. Форма работает`;
+  const box = document.getElementById("aiExamples");
+  AI_EXAMPLES.forEach(t => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "ai-ex"; b.textContent = t;
+    b.onclick = () => { aiForm.text.value = t; aiRun(); };
+    box.appendChild(b);
+  });
+}
+
+const fmtStep = p => [p.city, p.date, p.event_format, p.category,
+  p.budget != null ? Number(p.budget).toLocaleString("ru-RU") + " ₸" : null,
+  p.hours ? p.hours + " ч" : null, p.language].filter(Boolean).map(esc).join(", ");
+
+async function aiRun() {
+  const text = aiForm.text.value.trim();
+  if (!text) { aiForm.text.focus(); return; }
+  aiGo.disabled = true; skeleton();
+  document.querySelectorAll(".preset").forEach(x => x.classList.remove("active"));
+  history.replaceState(null, "", location.pathname);
+  try {
+    const res = await fetch("/api/ai", {method: "POST", headers: {"Content-Type": "application/json"},
+                                        body: JSON.stringify({text})});
+    const a = await res.json();
+    if (!a.ok) {
+      out.innerHTML = `<div class="verdict v-invalid_request"><div><span class="tag">ИИ недоступен</span>
+        <h3>${esc(a.error)}</h3><p>Заполните форму выше, подбор работает и без ИИ.</p></div></div>`;
+    } else if (a.clarify) {
+      out.innerHTML = `<div class="agent"><div class="clarify">${SPARK}<div>
+        <div class="agent-top"><b>ИИ уточняет</b><span class="model">${esc(a.model)} · ${(a.elapsed_ms / 1000).toFixed(1)} с</span></div>
+        <p>${esc(a.clarify)}</p></div></div></div>`;
+      aiForm.text.focus();
+    } else {
+      aiSteps = a.steps;
+      setForm(a.params);
+      const trace = a.steps.map((s, i) => `<div class="tstep"><em>${i + 1}</em><div>
+          <code>search_vendors(${fmtStep(s.params)})</code><div class="res">→ ${esc(s.outcome_label)}: найдено ${s.found}</div></div>
+          ${i > 0 ? `<button type="button" data-step="${i}">Показать</button>` : ""}</div>`).join("");
+      const agent = `<div class="agent"><div class="agent-top">${SPARK}<b>Совет ИИ-агента</b>
+          ${a.verified ? `<span class="check">✓ Факты сверены с данными</span>`
+                       : `<span class="check warn">Совет не прошёл проверку, показан текст движка</span>`}
+          <span class="model">${esc(a.model)} · ${(a.elapsed_ms / 1000).toFixed(1)} с</span></div>
+        <p class="say">${quoteify(a.answer)}</p>
+        <div class="trace"><div class="trace-title">Что сделал агент</div>${trace}</div></div>`;
+      render(a.result, agent);
+    }
+    out.scrollIntoView({behavior: "smooth", block: "start"});
+  } catch (e) {
+    out.innerHTML = `<div class="verdict v-invalid_request"><div><span class="tag">Ошибка</span>
+      <h3>Сервер не ответил</h3><p>Проверьте, что запущен python -m podbor.server.</p></div></div>`;
+  } finally { aiGo.disabled = false; }
+}
+
+aiForm.addEventListener("submit", e => { e.preventDefault(); aiRun(); });
+out.addEventListener("click", e => {
+  const b = e.target.closest("button[data-step]");
+  if (!b) return;
+  setForm(aiSteps[+b.dataset.step].params); run();
+});
+
 init();
 </script>
 </body>

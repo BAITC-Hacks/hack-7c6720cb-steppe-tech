@@ -20,6 +20,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from .data import WINDOW_END, WINDOW_START, load_vendors, norm
+from . import ai
 from .engine import FORMATS, LANGUAGES, recommend
 from .scenarios import find_all
 
@@ -40,6 +41,7 @@ def options() -> dict:
         "formats": FORMATS, "languages": LANGUAGES,
         "window": [WINDOW_START.isoformat(), WINDOW_END.isoformat()],
         "data": INFO,
+        "ai": ai.status(),
     }
 
 
@@ -73,13 +75,19 @@ class Handler(BaseHTTPRequestHandler):
         self._json({"error": "not found"}, 404)
 
     def do_POST(self):
-        if urlparse(self.path).path != "/api/recommend":
+        path = urlparse(self.path).path
+        if path not in ("/api/recommend", "/api/ai"):
             return self._json({"error": "not found"}, 404)
         try:
             n = int(self.headers.get("Content-Length") or 0)
             params = json.loads(self.rfile.read(n) or b"{}")
         except (ValueError, json.JSONDecodeError):
             return self._json({"error": "тело запроса должно быть JSON"}, 400)
+        if path == "/api/ai":
+            opts = options()
+            text = params.get("text", "") if isinstance(params, dict) else ""
+            return self._json(ai.ask(VENDORS, str(text)[:1000], opts["cities"],
+                                     [c["name"] for c in opts["categories"]]))
         self._json(recommend(VENDORS, params))
 
     def do_OPTIONS(self):
@@ -104,6 +112,8 @@ def main():
     p.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8000)))
     a = p.parse_args()
     print(f"Данные: {INFO['file']} ({INFO['total']} профилей, синтетических {INFO['synthetic']})")
+    st = ai.status()
+    print(f"ИИ-агент: {'включён, модель ' + st['model'] if st['enabled'] else 'выключен (нет OPENAI_API_KEY)'}")
     print(f"Откройте http://{a.host}:{a.port}")
     ThreadingHTTPServer((a.host, a.port), Handler).serve_forever()
 

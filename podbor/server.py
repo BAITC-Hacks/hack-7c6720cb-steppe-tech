@@ -59,6 +59,8 @@ class Handler(BaseHTTPRequestHandler):
         u = urlparse(self.path)
         if u.path in ("/", "/index.html"):
             return self._send(200, (STATIC / "index.html").read_bytes(), "text/html; charset=utf-8")
+        if u.path in ("/favicon.svg", "/favicon.ico"):
+            return self._send(200, (STATIC / "favicon.svg").read_bytes(), "image/svg+xml")
         if u.path == "/api/options":
             return self._json(options())
         if u.path == "/api/scenarios":

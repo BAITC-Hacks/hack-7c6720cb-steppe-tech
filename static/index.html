@@ -3,110 +3,376 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Подбор подрядчиков</title>
+<title>Steppe Tech · Подбор подрядчиков</title>
+<meta name="description" content="Три подрядчика для вашего события и честное объяснение, почему именно они.">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f6f5f2; --surface: #ffffff; --text: #1d1c1a; --muted: #6b6862; --line: #e3e0da;
-    --accent: #2f5d50; --accent-soft: #e4efe9;
-    --ok: #2f6b3a; --ok-soft: #e3f1e5; --warn: #8a5a00; --warn-soft: #fbf0d9;
-    --bad: #9b2c2c; --bad-soft: #f8e3e1; --info-soft: #eceaf6; --info: #4a3f8f;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #151514; --surface: #1f1e1c; --text: #ecebe7; --muted: #a19d95; --line: #34322e;
-      --accent: #7fbfa9; --accent-soft: #1f302a;
-      --ok: #8fd19b; --ok-soft: #1d2e20; --warn: #e8bd6a; --warn-soft: #33291a;
-      --bad: #ef9a93; --bad-soft: #3a2220; --info-soft: #25223a; --info: #b3aaf0;
-    }
+    --white: #FFFFFF; --paper: #F4F6FB; --ink: #0A0A0A; --ink-2: #1B1D22;
+    --muted: #5E6472; --line: #E3E6EE; --line-dark: #262A33;
+    --blue: #1747FF; --blue-deep: #0B2FC4; --blue-soft: #E8EEFF; --blue-glow: rgba(23,71,255,.35);
+    --radius: 18px; --shadow: 0 1px 2px rgba(10,10,10,.04), 0 12px 32px -12px rgba(10,20,60,.14);
+    --display: "Unbounded", "Manrope", system-ui, sans-serif;
+    --body: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text);
-         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
-  h1 { font-size: 22px; margin: 0 0 4px; }
-  .sub { color: var(--muted); margin: 0 0 20px; }
-  form { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px;
-         display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
-  label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
-  input, select, button { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line);
-                          border-radius: 6px; padding: 7px 9px; min-width: 0; }
-  button.primary { background: var(--accent); color: var(--surface); border: none; font-weight: 600;
-                   cursor: pointer; align-self: end; padding: 9px; }
-  .presets { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 22px; }
-  .presets button { cursor: pointer; font-size: 13px; background: var(--surface); }
-  .presets button:hover { border-color: var(--accent); }
-  .outcome { border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
-  .outcome .label { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
-  .outcome p { margin: 6px 0 0; }
-  .o-found { background: var(--ok-soft); } .o-found .label { color: var(--ok); }
-  .o-no_category_in_city { background: var(--info-soft); } .o-no_category_in_city .label { color: var(--info); }
-  .o-no_match { background: var(--warn-soft); } .o-no_match .label { color: var(--warn); }
-  .o-invalid_request { background: var(--bad-soft); } .o-invalid_request .label { color: var(--bad); }
-  .cards { display: grid; gap: 12px; }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
-  .card header { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
-  .rank { font-weight: 700; color: var(--accent); }
-  .name { font-weight: 700; font-size: 17px; }
-  .meta { color: var(--muted); font-size: 14px; }
-  .why { margin: 8px 0 6px; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body);
+         -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; background: var(--ink); color: var(--white); overflow: hidden; padding-bottom: 140px; }
+  .hero::before { content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse at 70% 0%, #000 20%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 70% 0%, #000 20%, transparent 70%); }
+  .hero::after { content: ""; position: absolute; width: 720px; height: 720px; right: -220px; top: -360px;
+    background: radial-gradient(circle, var(--blue) 0%, rgba(23,71,255,.35) 35%, transparent 68%);
+    filter: blur(20px); opacity: .9; animation: drift 14s ease-in-out infinite alternate; }
+  @keyframes drift { to { transform: translate(-80px, 60px) scale(1.08); } }
+  .nav { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between;
+         padding: 22px 0; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .brand svg { width: 38px; height: 38px; flex: none; }
+  .brand b { font: 700 16px/1 var(--display); letter-spacing: -.01em; }
+  .brand small { display: block; font-size: 12px; color: #9AA1B2; margin-top: 4px; letter-spacing: .02em; }
+  .nav-chip { font-size: 13px; color: #C9CEDA; border: 1px solid var(--line-dark); border-radius: 99px;
+              padding: 7px 14px; display: flex; align-items: center; gap: 8px; white-space: nowrap;
+              background: rgba(10,10,10,.5); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #2BD66B; box-shadow: 0 0 0 4px rgba(43,214,107,.18); }
+  .hero-body { position: relative; z-index: 2; padding: 56px 0 0; max-width: 1000px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600;
+             color: #B9C6FF; background: rgba(23,71,255,.16); border: 1px solid rgba(23,71,255,.45);
+             border-radius: 99px; padding: 6px 14px; letter-spacing: .02em; }
+  h1 { font: 800 clamp(30px, 5.6vw, 64px)/1.04 var(--display); letter-spacing: -.035em; margin: 22px 0 20px; }
+  h1 .blue { color: #3D66FF; }
+  .lead { font-size: clamp(16px, 2vw, 19px); color: #BFC5D2; max-width: 620px; margin: 0; }
+  .kpis { display: flex; flex-wrap: wrap; gap: 16px 40px; margin-top: 40px; }
+  .kpi b { display: block; font: 700 32px/1 var(--display); letter-spacing: -.02em; }
+  .kpi span { font-size: 13px; color: #8C93A3; }
+
+  /* ---------- Search panel ---------- */
+  .panel { position: relative; z-index: 3; margin-top: -96px; background: var(--white); border-radius: 24px;
+           box-shadow: 0 30px 80px -30px rgba(10,20,60,.45); padding: 26px; border: 1px solid var(--line); }
+  .panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+                margin-bottom: 18px; }
+  .panel-head h2 { font: 700 20px/1.2 var(--display); margin: 0; letter-spacing: -.02em; }
+  .panel-head p { margin: 0; color: var(--muted); font-size: 14px; }
+  form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field span { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .field span i { font-style: normal; font-weight: 500; text-transform: none; letter-spacing: 0; color: #9AA1B2; }
+  input, select { font: 600 15px/1.2 var(--body); color: var(--ink); background-color: var(--paper);
+                  border: 1.5px solid transparent; border-radius: 12px; padding: 13px 14px; min-width: 0; width: 100%;
+                  transition: border-color .15s, background-color .15s, box-shadow .15s;
+                  -webkit-appearance: none; appearance: none; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%230A0A0A' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+           background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  input:hover, select:hover { border-color: var(--line); }
+  input:focus, select:focus { outline: none; border-color: var(--blue); background-color: var(--white);
+                              box-shadow: 0 0 0 4px var(--blue-soft); }
+  .go { align-self: end; display: flex; align-items: center; justify-content: center; gap: 10px;
+        font: 700 16px/1 var(--body); color: var(--white); background: var(--blue); border: 0; border-radius: 12px;
+        padding: 15px 18px; cursor: pointer; box-shadow: 0 10px 24px -8px var(--blue-glow);
+        transition: transform .15s, background .15s, box-shadow .15s; }
+  .go:hover { background: var(--blue-deep); transform: translateY(-1px); box-shadow: 0 14px 30px -8px var(--blue-glow); }
+  .go:active { transform: translateY(0); }
+  .go:focus-visible, .preset:focus-visible { outline: 3px solid var(--blue-soft); outline-offset: 2px; }
+  .go svg { width: 18px; height: 18px; transition: transform .2s; }
+  .go:hover svg { transform: translateX(3px); }
+  .go:disabled { opacity: .7; cursor: progress; }
+
+  .presets-wrap { margin-top: 22px; padding-top: 20px; border-top: 1px dashed var(--line); }
+  .presets-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em;
+                   margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .presets { display: flex; flex-wrap: wrap; gap: 8px; }
+  .preset { font: 600 13px/1.3 var(--body); color: var(--ink); background: var(--white); border: 1.5px solid var(--line);
+            border-radius: 99px; padding: 8px 14px 8px 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            text-align: left; transition: border-color .15s, background .15s, color .15s; }
+  .preset em { font: 700 11px/1 var(--display); background: var(--ink); color: var(--white);
+               border-radius: 99px; width: 22px; height: 22px; display: grid; place-items: center; flex: none; }
+  .preset:hover { border-color: var(--blue); color: var(--blue); }
+  .preset.active { background: var(--blue); border-color: var(--blue); color: var(--white); }
+  .preset.active em { background: var(--white); color: var(--blue); }
+
+  /* ---------- Results ---------- */
+  #out { margin-top: 36px; min-height: 40px; scroll-margin-top: 20px; }
+  .empty { text-align: center; padding: 48px 20px; color: var(--muted); }
+  .empty .ic { width: 64px; height: 64px; margin: 0 auto 14px; border-radius: 18px; background: var(--white);
+               border: 1px solid var(--line); display: grid; place-items: center; }
+  .empty b { display: block; color: var(--ink); font: 700 18px/1.3 var(--display); margin-bottom: 6px; }
+
+  .verdict { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
+             background: var(--ink); color: var(--white); border-radius: var(--radius); padding: 24px 26px;
+             position: relative; overflow: hidden; }
+  .verdict::after { content: ""; position: absolute; right: -120px; bottom: -160px; width: 360px; height: 360px;
+                    background: radial-gradient(circle, rgba(23,71,255,.55), transparent 65%); }
+  .verdict > * { position: relative; z-index: 1; min-width: 0; }
+  .tag { display: inline-flex; align-items: center; gap: 8px; font: 700 12px/1 var(--body); text-transform: uppercase;
+         letter-spacing: .08em; padding: 7px 12px; border-radius: 99px; background: var(--blue); color: var(--white); }
+  .v-no_match .tag, .v-no_category_in_city .tag { background: var(--white); color: var(--ink); }
+  .v-invalid_request .tag { background: #FF3B3B; }
+  .verdict h3 { font: 700 clamp(18px, 2.4vw, 24px)/1.3 var(--display); letter-spacing: -.02em; margin: 14px 0 8px; }
+  .verdict p { margin: 6px 0 0; color: #BFC5D2; font-size: 15px; }
+  .verdict q { quotes: "«" "»"; color: var(--white); font-weight: 700; }
+  .funnel { display: flex; gap: 8px; align-items: stretch; }
+  .step { background: rgba(255,255,255,.06); border: 1px solid var(--line-dark); border-radius: 14px; padding: 12px 16px;
+          min-width: 92px; text-align: center; }
+  .step b { display: block; font: 800 28px/1 var(--display); }
+  .step span { font-size: 12px; color: #9AA1B2; }
+  .step.hi { background: var(--blue); border-color: var(--blue); }
+  .step.hi span { color: #DCE3FF; }
+  .arrow { align-self: center; color: #5E6472; }
+
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
+  .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px;
+          box-shadow: var(--shadow); display: flex; flex-direction: column; position: relative; min-width: 0;
+          opacity: 0; transform: translateY(14px); animation: rise .5s cubic-bezier(.2,.7,.2,1) forwards;
+          transition: box-shadow .2s, border-color .2s; }
+  .card:hover { border-color: #C7D3FF; box-shadow: 0 1px 2px rgba(10,10,10,.04), 0 24px 48px -16px rgba(23,71,255,.28); }
+  .card.first { border: 2px solid var(--blue); }
+  .card.first::before { content: "Лучшее совпадение"; position: absolute; top: -12px; left: 20px; background: var(--blue);
+                        color: var(--white); font: 700 11px/1 var(--body); text-transform: uppercase; letter-spacing: .06em;
+                        padding: 6px 10px; border-radius: 99px; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .rank { font: 800 44px/0.9 var(--display); letter-spacing: -.04em; color: var(--ink); }
+  .card.first .rank { color: var(--blue); }
+  .ring { width: 58px; height: 58px; border-radius: 50%; flex: none; display: grid; place-items: center;
+          background: conic-gradient(var(--blue) calc(var(--p) * 1%), var(--blue-soft) 0); }
+  .ring b { width: 46px; height: 46px; border-radius: 50%; background: var(--white); display: grid; place-items: center;
+            font: 700 14px/1 var(--display); }
+  .name { font: 700 20px/1.2 var(--display); letter-spacing: -.02em; margin: 16px 0 8px; overflow-wrap: anywhere; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { font-size: 12px; font-weight: 600; background: var(--paper); border-radius: 99px; padding: 4px 10px; color: var(--ink-2); }
+  .price { margin-top: 14px; font: 800 18px/1 var(--body); }
+  .why { margin: 14px 0 16px; color: var(--ink-2); font-size: 15px; flex: 1; }
+  .why q { quotes: "«" "»"; background: var(--blue-soft); color: var(--blue-deep); padding: 1px 4px; border-radius: 5px;
+           -webkit-box-decoration-break: clone; box-decoration-break: clone; }
   .badges { display: flex; flex-wrap: wrap; gap: 6px; }
-  .badge { font-size: 12px; border-radius: 99px; padding: 2px 9px; background: var(--accent-soft); color: var(--accent); }
-  .badge.syn { background: var(--warn-soft); color: var(--warn); }
-  .badge.real { background: var(--ok-soft); color: var(--ok); }
-  details { margin-top: 8px; font-size: 13px; color: var(--muted); }
-  details table { border-collapse: collapse; margin-top: 6px; }
-  details td { padding: 2px 10px 2px 0; }
-  .block { background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-           padding: 12px 16px; margin-top: 14px; }
-  .block h3 { font-size: 14px; margin: 0 0 6px; }
-  .block ul { margin: 0; padding-left: 18px; }
-  .foot { color: var(--muted); font-size: 12px; margin-top: 18px; }
+  .badge { font-size: 12px; font-weight: 700; border-radius: 8px; padding: 4px 9px; max-width: 100%; overflow-wrap: anywhere; background: var(--ink); color: var(--white); }
+  .badge.real { background: var(--blue-soft); color: var(--blue-deep); }
+  .badge.flag { background: var(--white); color: var(--ink); border: 1.5px solid var(--ink); }
+  .bars { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); display: grid; gap: 9px; }
+  .bar { display: grid; grid-template-columns: 1fr 38px; gap: 4px 10px; font-size: 12px; align-items: center; }
+  .bar span { color: var(--muted); font-weight: 600; }
+  .bar output { text-align: right; font-weight: 700; }
+  .bar .track { grid-column: 1 / -1; height: 6px; border-radius: 99px; background: var(--paper); overflow: hidden; }
+  .bar .fill { height: 100%; width: 0; border-radius: 99px; background: var(--ink); transition: width .9s cubic-bezier(.2,.7,.2,1); }
+  .card.first .bar .fill { background: var(--blue); }
+  .facts { margin-top: 12px; font-size: 12px; color: var(--muted); }
+
+  .blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .block { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; min-width: 0; }
+  .block.solo { grid-column: 1 / -1; }
+  .block h4 { font: 700 15px/1.2 var(--display); margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+  .block h4 .n { font: 700 12px/1 var(--body); background: var(--paper); border-radius: 99px; padding: 4px 9px; color: var(--muted); }
+  .block ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .block li { font-size: 14px; padding-left: 18px; position: relative; color: var(--ink-2); }
+  .block li::before { content: ""; position: absolute; left: 0; top: .6em; width: 7px; height: 7px; border-radius: 2px; background: var(--blue); }
+  .block.rej li::before { background: var(--ink); }
+  details.block summary { cursor: pointer; list-style: none; }
+  details.block summary::-webkit-details-marker { display: none; }
+  details.block summary h4 { margin: 0; }
+  details.block[open] summary h4 { margin-bottom: 12px; }
+  .chev { margin-left: auto; transition: transform .2s; }
+  details[open] .chev { transform: rotate(180deg); }
+  .speed { margin-top: 14px; font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+
+  .skeleton { background: linear-gradient(90deg, #E9ECF4 0%, #F7F8FB 50%, #E9ECF4 100%); background-size: 200% 100%;
+              animation: shimmer 1.1s linear infinite; border-radius: var(--radius); }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+
+  /* ---------- How it works ---------- */
+  .how { margin-top: 72px; }
+  .how h2 { font: 800 clamp(24px, 3.4vw, 36px)/1.1 var(--display); letter-spacing: -.03em; margin: 0 0 24px; }
+  .how-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .how-item { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .how-item .num { font: 800 14px/1 var(--display); color: var(--blue); }
+  .how-item b { display: block; font: 700 16px/1.3 var(--display); margin: 14px 0 8px; letter-spacing: -.01em; }
+  .how-item p { margin: 0; font-size: 14px; color: var(--muted); }
+  .how-item.dark { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .how-item.dark p { color: #A9B0BF; }
+
+  footer { margin-top: 72px; background: var(--ink); color: #8C93A3; font-size: 13px; }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 28px 20px; }
+  footer .brand b { color: var(--white); font-size: 14px; }
+  footer .brand svg { width: 30px; height: 30px; }
+
+  @media (max-width: 960px) {
+    form { grid-template-columns: repeat(2, 1fr); }
+    .go { grid-column: 1 / -1; }
+    .cards { grid-template-columns: 1fr; }
+    .verdict { grid-template-columns: 1fr; }
+    .how-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 16px; }
+    .panel { padding: 18px; border-radius: 20px; }
+    form { grid-template-columns: 1fr; }
+    .blocks, .how-grid { grid-template-columns: 1fr; }
+    .nav-chip .long { display: none; }
+    .funnel { flex-wrap: wrap; }
+    .step { flex: 1; min-width: 80px; }
+    .arrow { display: none; }
+    .hero { padding-bottom: 120px; }
+    footer .wrap { padding: 24px 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .card { opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <h1>Подбор подрядчиков</h1>
-  <p class="sub">До трёх подрядчиков из каталога с объяснением, почему именно они. Занятые на дату в выдачу не попадают.</p>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="16" fill="#1747FF"/>
+    <rect x="14" y="16" width="36" height="8" rx="4" fill="#fff"/>
+    <rect x="14" y="28" width="26" height="8" rx="4" fill="#fff" opacity=".78"/>
+    <rect x="14" y="40" width="16" height="8" rx="4" fill="#fff" opacity=".55"/>
+    <circle cx="45" cy="44" r="7" fill="#0A0A0A"/>
+    <path d="M41.8 44.2l2.2 2.2 4.2-4.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>
 
-  <form id="f">
-    <label>Город <select name="city" required></select></label>
-    <label>Дата <input type="date" name="date" required></label>
-    <label>Тип мероприятия <select name="event_format" required></select></label>
-    <label>Категория <select name="category" required></select></label>
-    <label>Бюджет, ₸ <input type="number" name="budget" min="1" step="10000" required></label>
-    <label>Длительность, ч <input type="number" name="hours" min="1" step="0.5" placeholder="необязательно"></label>
-    <label>Язык <select name="language"><option value="">любой</option></select></label>
-    <button class="primary" type="submit">Подобрать</button>
-  </form>
-  <div class="presets" id="presets"></div>
-  <div id="out"></div>
-  <p class="foot" id="foot"></p>
+<header class="hero">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="/"><svg aria-hidden="true"><use href="#logo"/></svg>
+        <div><b>Подбор</b><small>Steppe Tech</small></div></a>
+      <div class="nav-chip"><span class="dot"></span><span id="dataChip">Загружаем каталог…</span></div>
+    </nav>
+    <div class="hero-body">
+      <span class="eyebrow">★ Умный подбор event-подрядчиков</span>
+      <h1>Три подрядчика.<br><span class="blue">И почему именно они.</span></h1>
+      <p class="lead">Укажите город, дату и бюджет. Сервис уберёт занятых и дорогих и оставит лучших. Каждый выбор объяснён фактами из профиля.</p>
+      <div class="kpis">
+        <div class="kpi"><b id="kVendors">—</b><span>профилей в каталоге</span></div>
+        <div class="kpi"><b id="kCats">—</b><span>категорий</span></div>
+        <div class="kpi"><b id="kCities">—</b><span>городов</span></div>
+        <div class="kpi"><b>&lt;10 мс</b><span>на один подбор</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel" aria-label="Параметры подбора">
+    <div class="panel-head">
+      <h2>Что за событие?</h2>
+      <p>Длительность и язык можно не указывать</p>
+    </div>
+    <form id="f">
+      <label class="field"><span>Город</span><select name="city" required></select></label>
+      <label class="field"><span>Дата</span><input type="date" name="date" required></label>
+      <label class="field"><span>Тип события</span><select name="event_format" required></select></label>
+      <label class="field"><span>Категория</span><select name="category" required></select></label>
+      <label class="field"><span>Бюджет, ₸</span><input type="number" name="budget" min="1" step="10000" required></label>
+      <label class="field"><span>Часы <i>по желанию</i></span><input type="number" name="hours" min="1" step="0.5" placeholder="например, 6"></label>
+      <label class="field"><span>Язык <i>по желанию</i></span><select name="language"><option value="">любой</option></select></label>
+      <button class="go" type="submit" id="go">Подобрать
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </form>
+    <div class="presets-wrap">
+      <div class="presets-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1747FF" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
+        Готовые сценарии в один клик
+      </div>
+      <div class="presets" id="presets"></div>
+    </div>
+  </section>
+
+  <section id="out" aria-live="polite">
+    <div class="empty">
+      <div class="ic"><svg width="30" height="30" aria-hidden="true"><use href="#logo"/></svg></div>
+      <b>Здесь появятся три лучших подрядчика</b>
+      Заполните форму или выберите готовый сценарий выше.
+    </div>
+  </section>
+
+  <section class="how">
+    <h2>Как работает подбор</h2>
+    <div class="how-grid">
+      <div class="how-item"><span class="num">01</span><b>Жёсткие фильтры</b>
+        <p>Город, категория, формат события, бюджет, язык и часы. Не подходит хоть по одному условию, значит не в выдаче.</p></div>
+      <div class="how-item"><span class="num">02</span><b>Занятость на дату</b>
+        <p>Занятые в выбранный день отсекаются. Сервис показывает, кто вошёл бы в тройку в другой день.</p></div>
+      <div class="how-item"><span class="num">03</span><b>Прозрачный рейтинг</b>
+        <p>Смысл описания, запас бюджета, язык, часы и надёжность данных. Каждый вес виден в карточке.</p></div>
+      <div class="how-item dark"><span class="num">04</span><b>Честный ответ</b>
+        <p>Если подходящих меньше трёх или нет вовсе, сервис так и скажет. И подскажет, что поменять.</p></div>
+    </div>
+  </section>
 </main>
+
+<footer>
+  <div class="wrap">
+    <span class="brand"><svg aria-hidden="true"><use href="#logo"/></svg><b>Подбор · Steppe Tech</b></span>
+    <span id="foot">Python и стандартная библиотека. Без внешних API и моделей.</span>
+  </div>
+</footer>
+
 <script>
 const f = document.getElementById("f");
 const out = document.getElementById("out");
+const go = document.getElementById("go");
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fill = (sel, items, fmt = x => [x, x]) =>
   items.forEach(i => { const [v, t] = fmt(i); sel.insertAdjacentHTML("beforeend", `<option value="${esc(v)}">${esc(t)}</option>`); });
+const PARTS = {relevance: ["Смысл описания", 35], budget: ["Запас по бюджету", 30],
+               language: ["Язык", 15], hours: ["Часы на площадке", 10], quality: ["Надёжность данных", 10]};
+const CHEV = `<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>`;
+const BOLT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="#1747FF" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>`;
+
+function countUp(el, to) {
+  const t0 = performance.now(), d = 900;
+  const tick = t => {
+    const k = Math.min(1, (t - t0) / d);
+    el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
+    if (k < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
 
 async function init() {
   const o = await (await fetch("/api/options")).json();
   fill(f.city, o.cities);
   fill(f.event_format, o.formats);
-  fill(f.category, o.categories, c => [c.name, `${c.name} (${c.count})`]);
+  fill(f.category, o.categories, c => [c.name, `${c.name} · ${c.count}`]);
   fill(f.language, o.languages);
   f.date.min = o.window[0]; f.date.max = o.window[1]; f.date.value = "2026-11-14";
   f.budget.value = 500000;
+  countUp(document.getElementById("kVendors"), o.data.total);
+  countUp(document.getElementById("kCats"), o.categories.length);
+  countUp(document.getElementById("kCities"), o.cities.length);
+  document.getElementById("dataChip").innerHTML = `<span class="long">Каталог онлайн: </span>${o.data.total} профилей`;
   document.getElementById("foot").textContent =
-    `Данные: ${o.data.file}, профилей ${o.data.total}, из них синтетических ${o.data.synthetic}.`;
+    `Данные: ${o.data.file}. Профилей ${o.data.total}, из них синтетических ${o.data.synthetic}.`;
   const sc = await (await fetch("/api/scenarios")).json();
   const box = document.getElementById("presets");
-  sc.forEach(s => {
+  sc.forEach((s, i) => {
     const b = document.createElement("button");
-    b.type = "button"; b.textContent = s.title;
-    b.onclick = () => { setForm(s.params); run(); };
+    b.type = "button"; b.className = "preset";
+    b.innerHTML = `<em>${i + 1}</em>${esc(s.title)}`;
+    b.onclick = () => {
+      box.querySelectorAll(".preset").forEach(x => x.classList.remove("active"));
+      b.classList.add("active"); setForm(s.params); run();
+      history.replaceState(null, "", `#s${i + 1}`);
+    };
     box.appendChild(b);
   });
+  const m = location.hash.match(/^#s(\d+)$/);
+  if (m && box.children[m[1] - 1]) box.children[m[1] - 1].click();
 }
 
 function setForm(p) {
@@ -114,49 +380,89 @@ function setForm(p) {
     f[k].value = p[k] ?? "";
 }
 
+function skeleton() {
+  out.innerHTML = `<div class="skeleton" style="height:128px"></div>
+    <div class="cards">${'<div class="skeleton" style="height:360px"></div>'.repeat(3)}</div>`;
+}
+
 async function run() {
   const params = Object.fromEntries(new FormData(f).entries());
-  out.innerHTML = "<p class='sub'>Подбираем…</p>";
-  const r = await (await fetch("/api/recommend", {method: "POST", headers: {"Content-Type": "application/json"},
-                                                   body: JSON.stringify(params)})).json();
-  render(r);
+  go.disabled = true; skeleton();
+  try {
+    const res = await fetch("/api/recommend", {method: "POST", headers: {"Content-Type": "application/json"},
+                                               body: JSON.stringify(params)});
+    render(await res.json());
+    out.scrollIntoView({behavior: "smooth", block: "start"});
+  } catch (e) {
+    out.innerHTML = `<div class="verdict v-invalid_request"><div><span class="tag">Ошибка</span>
+      <h3>Сервер не ответил</h3><p>Проверьте, что запущен python -m podbor.server.</p></div></div>`;
+  } finally { go.disabled = false; }
+}
+
+const quoteify = s => esc(s).replace(/«([^»]+)»/g, "<q>$1</q>");
+
+function funnel(st) {
+  if (!st || st.in_city == null) return "";
+  return `<div class="funnel" aria-label="Воронка отбора">
+    <div class="step"><b>${st.in_city}</b><span>в городе</span></div><span class="arrow">→</span>
+    <div class="step"><b>${st.busy_on_date ?? 0}</b><span>заняты</span></div><span class="arrow">→</span>
+    <div class="step hi"><b>${st.passed ?? 0}</b><span>подошли</span></div></div>`;
+}
+
+function card(c, i) {
+  const pct = Math.round(c.score * 100);
+  const bars = Object.entries(c.score_parts).map(([k, v]) => {
+    const [label, w] = PARTS[k] || [k, ""];
+    const val = Math.round(v * 100);
+    return `<div class="bar"><span>${esc(label)}${w ? ` · вес ${w}%` : ""}</span><output>${val}</output>
+      <div class="track"><div class="fill" data-w="${val}"></div></div></div>`;
+  }).join("");
+  return `<article class="card${c.rank === 1 ? " first" : ""}" style="animation-delay:${i * 110}ms">
+    <div class="card-top"><span class="rank">0${c.rank}</span>
+      <div class="ring" style="--p:${pct}" title="Итоговый балл из 100"><b>${pct}</b></div></div>
+    <div class="name">${esc(c.name)}</div>
+    <div class="meta"><span class="pill">${esc(c.category)}</span><span class="pill">${esc(c.city)}</span>
+      ${c.max_hours != null ? `<span class="pill">до ${c.max_hours} ч</span>` : ""}</div>
+    <div class="price">${esc(c.price_text)}</div>
+    <p class="why">${quoteify(c.explanation)}</p>
+    <div class="badges"><span class="badge ${c.synthetic ? "" : "real"}">${esc(c.provenance)}</span>
+      ${(c.flags || []).map(x => `<span class="badge flag">${esc(x)}</span>`).join("")}</div>
+    <div class="bars">${bars}</div>
+    <div class="facts">Форматы: ${esc((c.formats || []).join(", "))}. Языки: ${esc((c.languages || []).join(", "))}.</div>
+  </article>`;
 }
 
 function render(r) {
-  let h = `<div class="outcome o-${esc(r.outcome)}"><div class="label">${esc(r.outcome_label)}</div>
-           <p>${esc(r.headline)}</p>`;
-  for (const k of ["why_fewer", "date_effect"]) if (r[k]) h += `<p>${esc(r[k])}</p>`;
+  let h = `<div class="verdict v-${esc(r.outcome)}"><div><span class="tag">${esc(r.outcome_label)}</span>
+           <h3>${esc(r.headline)}</h3>`;
+  for (const k of ["why_fewer", "date_effect"]) if (r[k]) h += `<p>${quoteify(r[k])}</p>`;
   (r.notes || []).forEach(n => h += `<p>${esc(n)}</p>`);
-  h += "</div><div class='cards'>";
-  (r.cards || []).forEach(c => {
-    const prov = c.synthetic ? "syn" : "real";
-    h += `<article class="card"><header><span class="rank">#${c.rank}</span><span class="name">${esc(c.name)}</span>
-      <span class="meta">${esc(c.category)} · ${esc(c.city)} · ${esc(c.price_text)}</span></header>
-      <p class="why">${esc(c.explanation)}</p>
-      <div class="badges"><span class="badge ${prov}">${esc(c.provenance)}</span>
-      ${c.flags.map(x => `<span class="badge syn">${esc(x)}</span>`).join("")}</div>
-      <details><summary>Как считали место в выдаче (итог ${c.score.toFixed(3)})</summary><table>
-      ${Object.entries(c.score_parts).map(([k, v]) => `<tr><td>${esc(PARTS[k] || k)}</td><td>${v}</td></tr>`).join("")}
-      </table>Форматы: ${esc(c.formats.join(", "))}. Языки: ${esc(c.languages.join(", "))}.
-      Часы: ${c.max_hours == null ? "не привязаны к площадке" : "до " + c.max_hours}.</details></article>`;
-  });
-  h += "</div>";
-  if (r.outcome !== "found" && r.rejected && r.rejected.length) {
-    h += `<div class="block"><h3>Почему не подошли</h3><ul>` +
-      r.rejected.map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.reasons.join("; "))}</li>`).join("") + "</ul></div>";
-  } else if (r.rejected && r.rejected.length) {
-    h += `<details class="block"><summary>Не прошли условия (${r.rejected.length})</summary><ul>` +
-      r.rejected.map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.reasons.join("; "))}</li>`).join("") + "</ul></details>";
-  }
-  if (r.suggestions && r.suggestions.length)
-    h += `<div class="block"><h3>Что можно сделать</h3><ul>${r.suggestions.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>`;
-  if (r.elapsed_ms != null) h += `<p class="foot">Ответ за ${r.elapsed_ms} мс.</p>`;
-  out.innerHTML = h;
-}
-const PARTS = {relevance: "смысл описания и специализация (35%)", budget: "запас по бюджету (30%)",
-               language: "язык (15%)", hours: "часы на площадке (10%)", quality: "надёжность данных (10%)"};
+  h += `</div>${funnel(r.stats)}</div>`;
+  if (r.cards && r.cards.length) h += `<div class="cards">${r.cards.map(card).join("")}</div>`;
 
-f.addEventListener("submit", e => { e.preventDefault(); run(); });
+  const blocks = [];
+  const rej = r.rejected || [];
+  const rejList = rej.map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.reasons.join("; "))}</li>`).join("");
+  if (rej.length && r.outcome !== "found")
+    blocks.push(`<div class="block rej"><h4>Почему не подошли <span class="n">${rej.length}</span></h4><ul>${rejList}</ul></div>`);
+  else if (rej.length)
+    blocks.push(`<details class="block rej"><summary><h4>Не прошли условия <span class="n">${rej.length}</span>${CHEV}</h4></summary><ul>${rejList}</ul></details>`);
+  if (r.suggestions && r.suggestions.length)
+    blocks.push(`<div class="block"><h4>Что можно поменять</h4><ul>${r.suggestions.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>`);
+  if (blocks.length === 1) blocks[0] = blocks[0].replace('class="block', 'class="block solo');
+  if (blocks.length) h += `<div class="blocks">${blocks.join("")}</div>`;
+  if (r.elapsed_ms != null) h += `<div class="speed">${BOLT}Ответ за ${r.elapsed_ms} мс</div>`;
+  out.innerHTML = h;
+  requestAnimationFrame(() => requestAnimationFrame(() =>
+    out.querySelectorAll(".fill").forEach(el => el.style.width = el.dataset.w + "%")));
+}
+
+f.addEventListener("submit", e => {
+  e.preventDefault();
+  document.querySelectorAll(".preset").forEach(x => x.classList.remove("active"));
+  history.replaceState(null, "", location.pathname);
+  run();
+});
 init();
 </script>
 </body>

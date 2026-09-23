@@ -135,6 +135,8 @@ def _system_prompt(cities: list, categories: list) -> str:
 3. Если исход no_match или подрядчиков меньше трёх, обязательно сделай ещё один поиск, а при необходимости второй.
    Меняй ровно один параметр по подсказкам из suggestions: сначала ближайшая соседняя дата, где кто-то подходит,
    иначе бюджет, который там назван. Не меняй город, категорию и тип события.
+   Бюджет пользователя — тот, что он назвал сам. Вариант из альтернативного поиска никогда не называй
+   «в вашем бюджете» или «в вашу дату», если бюджет или дата в нём другие: прямо скажи, насколько он дороже или на какую дату.
 4. В конце напиши совет из 2–4 предложений от лица сервиса («советуем», «подойдёт»): кого выбрать из первого поиска и почему,
    а если искал альтернативы — что именно они дали. Используй только имена, цены и даты из ответов инструмента.
    Не придумывай фактов. Не задавай вопросов и не предлагай сделать что-то ещё. Без markdown и списков.
@@ -157,6 +159,20 @@ def _compact(res: dict) -> dict:
         "rejected": [{"name": r["name"], "reasons": r["reasons"]} for r in res.get("rejected", [])][:8],
         "suggestions": res.get("suggestions", []),
     }
+
+
+_LABELS = {"date": "дата", "budget": "бюджет", "hours": "часы", "language": "язык",
+           "city": "город", "category": "категория", "event_format": "тип события"}
+
+
+def _diff_note(user: dict, alt: dict) -> str:
+    """Явная пометка для модели: чем альтернативный поиск отличается от запроса пользователя."""
+    diffs = [f"{_LABELS.get(k, k)} {alt.get(k, 'не указан')} вместо {user.get(k, 'не указан')}"
+             for k in _LABELS if alt.get(k) != user.get(k)]
+    if not diffs:
+        return "Повтор того же поиска, условия пользователя не изменены."
+    return ("Это альтернатива, а не исходный запрос пользователя. Отличия: " + "; ".join(diffs)
+            + ". В совете прямо скажи, что вариант выходит за исходные условия.")
 
 
 # ---------------------------------------------------------------- Проверка фактов
@@ -226,6 +242,8 @@ def ask(vendors: list, text: str, cities: list, categories: list, chat=None) -> 
                     params = {k: v for k, v in params.items() if v is not None}
                     res = recommend(vendors, params)
                     payload = _compact(res)
+                    if first is not None:
+                        payload = {"alternative_search": _diff_note(first[0], params), **payload}
                     steps.append({"params": params, "outcome": res["outcome"],
                                   "outcome_label": res["outcome_label"], "headline": res["headline"],
                                   "found": len(res.get("cards", []))})

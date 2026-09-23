@@ -88,6 +88,16 @@ class AgentTest(unittest.TestCase):
         out = ai.ask(VENDORS, "запрос", CITIES, CATEGORIES, chat=scripted(*calls))
         self.assertEqual(len(out["steps"]), ai.MAX_TOOL_CALLS)
 
+    def test_alternative_search_is_marked_for_model(self):
+        alt = dict(DENSE, budget=int(DENSE["budget"]) * 2)
+        chat = scripted(tool_call(DENSE, "c1"), tool_call(alt, "c2"), {"role": "assistant", "content": "Советуем."})
+        ai.ask(VENDORS, "запрос", CITIES, CATEGORIES, chat=chat)
+        first_tool = json.loads(chat.seen[1][-1]["content"])
+        second_tool = json.loads(chat.seen[2][-1]["content"])
+        self.assertNotIn("alternative_search", first_tool)
+        self.assertIn("бюджет", second_tool["alternative_search"])
+        self.assertIn("вместо", second_tool["alternative_search"])
+
     def test_schema_limits_values_to_catalog(self):
         props = ai._tool_schema(CITIES, CATEGORIES)[0]["function"]["parameters"]["properties"]
         self.assertEqual(props["city"]["enum"], CITIES)
